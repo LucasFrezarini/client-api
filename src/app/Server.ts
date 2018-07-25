@@ -8,10 +8,12 @@ export class Server {
 
   private logger: Logger;
   private plugins: IPlugin[];
+  private routes: Hapi.ServerRoute[];
 
-  constructor({ logger, plugins }) {
+  constructor({ logger, plugins, routes }) {
     this.logger = logger;
     this.plugins = plugins;
+    this.routes = routes;
   }
 
   public async init() {
@@ -22,13 +24,8 @@ export class Server {
       port: this.port,
     });
 
-   // const routes = router.routes;
-
-  //  this.logger.info("Loading routes...");
-   // serverInstance.route(routes);
-   // this.logger.info("Routes loaded successfully.");
-
     try {
+      this.loadRoutes(serverInstance);
       await this.registerPlugins(serverInstance);
       await serverInstance.start();
       return serverInstance;
@@ -38,7 +35,13 @@ export class Server {
     }
   }
 
-  public async registerPlugins(serverInstance: Hapi.Server) {
+  private async loadRoutes(serverInstance: Hapi.Server) {
+    this.logger.debug("Loading routes...");
+    serverInstance.route(this.routes);
+    this.logger.debug("Routes loaded successfully.");
+  }
+
+  private async registerPlugins(serverInstance: Hapi.Server) {
     /* Map all plugins to register promises and execute them concurrently */
     await Promise.all(
       this.plugins.map(this.registerPlugin.bind(this, serverInstance)),
