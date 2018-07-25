@@ -10,7 +10,7 @@ export class LoggerFactory {
         winston.format.colorize(),
         winston.format.json(),
       ),
-      level: "info",
+      level: "debug",
       transports: [
         new winston.transports.File({ filename: "log/error.log"}),
         new winston.transports.File({ filename: "log/combined.log"}),
