@@ -1,7 +1,6 @@
 import { Request } from "hapi";
-import { Controller } from "../Controller";
 
-class ContactsController extends Controller {
+class ContactsController {
   public async getContacts(req: Request) {
     return [
       {
