@@ -36,10 +36,4 @@ container.register({
   server: awilix.asClass(Server).singleton(),
 });
 
-const connectionFactory = container.resolve<ConnectionFactory>("connectionFactory");
-
-container.register({
-  connection: awilix.asValue(connectionFactory.createConnection()),
-});
-
 export { container };
