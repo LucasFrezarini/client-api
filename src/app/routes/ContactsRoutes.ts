@@ -1,7 +1,7 @@
 import * as Joi from "joi";
 
 import { ServerRoute } from "hapi";
-import { ContactsController } from "./ContactsController";
+import { ContactsController } from "../controller/ContactsController";
 
 const controller = new ContactsController();
 

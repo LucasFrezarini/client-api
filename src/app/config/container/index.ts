@@ -13,7 +13,8 @@ const container = awilix.createContainer({
 });
 
 container.loadModules([
-  path.join(__dirname, "../../", "api/**/*.js"),
+  path.join(__dirname, "../../", "config/mongoose/**/*.js"),
+  path.join(__dirname, "../../", "services/**/*.js"),
 ], {
   formatName: "camelCase",
   resolverOptions: {

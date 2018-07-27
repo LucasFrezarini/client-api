@@ -1,20 +1,7 @@
 import * as mongoose from "mongoose";
 
 import { Model } from "../Model";
-import { ContactSchema } from "./ContactsSchema";
-
-export interface IContact {
-  firstName: string;
-  lastName: string;
-  email: string;
-  deleted?: boolean;
-  phones?: IPhones;
-}
-
-export interface IPhones {
-  number: number;
-  sort: string;
-}
+import { ContactSchema } from "../schemas/ContactsSchema";
 
 class ContactsModel extends Model {
 

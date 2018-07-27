@@ -1,6 +1,6 @@
 import { Connection } from "mongoose";
 import { Logger } from "winston";
-import { IContact } from "./ContactsModel";
+import { IContact } from "../interfaces/IContact";
 
 class ContactsService {
 
@@ -14,6 +14,10 @@ class ContactsService {
 
   public findAll() {
     return this.db.model("contact").find({deleted: false});
+  }
+
+  public find(criteria, fields, sort) {
+    return this.db.model("contact");
   }
 
   public create(contact: IContact) {

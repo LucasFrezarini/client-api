@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 
 import { Logger } from "winston";
-import { Model } from "../../api/Model";
+import { Model } from "../../config/mongoose/Model";
 
 class ConnectionFactory {
   private database = process.env.DB_DATABASE;

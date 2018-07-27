@@ -1,8 +1,8 @@
 import { Request, ResponseToolkit } from "hapi";
 import { Logger } from "winston";
-import { container } from "../../config/container";
-import { IContact } from "./ContactsModel";
-import ContactsService from "./ContactsService";
+import { container } from "../config/container";
+import { IContact } from "../interfaces/IContact";
+import ContactsService from "../services/ContactsService";
 
 class ContactsController {
   public async getContacts(req: Request) {
