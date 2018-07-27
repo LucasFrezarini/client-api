@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
 
 import { Logger } from "winston";
+import { Model } from "../../api/Model";
 
 class ConnectionFactory {
   private database = process.env.DB_DATABASE;
@@ -10,9 +11,11 @@ class ConnectionFactory {
   private user = process.env.DB_USER;
 
   private logger: Logger;
+  private models: Model[];
 
-  constructor({ logger }) {
+  constructor({ logger, models }) {
     this.logger = logger;
+    this.models = models;
   }
 
   public async createConnection() {
@@ -33,6 +36,7 @@ class ConnectionFactory {
 
       db.once("open", () => {
         this.logger.info(`Connected to the MongoDB instance: ${this.host}:${this.port} (database: ${this.database}).`);
+        this.registerModels(db);
         resolve(db);
       });
     });
@@ -44,6 +48,13 @@ class ConnectionFactory {
     }
 
     return `mongodb://${this.host}:${this.port}/${this.database}`;
+  }
+
+  private registerModels(db: mongoose.Connection) {
+    this.models.forEach((model) => {
+      this.logger.debug(`Registering model ${model.getModelName()} into connection`);
+      model.register(db);
+    });
   }
 }
 

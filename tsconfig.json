@@ -7,10 +7,6 @@
     "typeRoots": [
         "node_modules/@types"
     ],
-    "types": [
-      "mocha",
-      "reflect-metadata"
-    ],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
