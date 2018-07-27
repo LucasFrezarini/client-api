@@ -6,7 +6,8 @@ import { PluginProvider } from "../../plugins/PluginProvider";
 import { Server } from "../../Server";
 import { LoggerFactory } from "../../utils/LoggerFactory";
 import { ConnectionFactory } from "../mongoose/ConnectionFactory";
-import { routesContainer } from "../routes";
+import { registerModels } from "./models";
+import { registerRoutes } from "./routes";
 
 const container = awilix.createContainer({
   injectionMode: awilix.InjectionMode.PROXY,
@@ -15,6 +16,7 @@ const container = awilix.createContainer({
 container.loadModules([
   path.join(__dirname, "../../", "config/mongoose/**/*.js"),
   path.join(__dirname, "../../", "services/**/*.js"),
+  path.join(__dirname, "../../", "routes/**/*.js"),
 ], {
   formatName: "camelCase",
   resolverOptions: {
@@ -23,17 +25,13 @@ container.loadModules([
   },
 });
 
-const models = [
-  container.resolve("contactsModel"),
-];
-
-container.register("models", awilix.asValue(models));
+registerModels(container);
+registerRoutes(container);
 
 container.register({
   connectionFactory: awilix.asClass(ConnectionFactory).singleton(),
   logger: awilix.asFunction(new LoggerFactory().createLogger).singleton(),
   plugins: awilix.asFunction(new PluginProvider().getPlugins).singleton(),
-  routes: awilix.asValue(routesContainer),
   server: awilix.asClass(Server).singleton(),
 });
 
