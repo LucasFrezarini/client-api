@@ -12,7 +12,7 @@ class ContactsService {
   }
 
   public async findAll() {
-    return this.db.model("contact").find();
+    return this.db.model("contact").find({deleted: false});
   }
 }
 

@@ -10,12 +10,22 @@ describe("Contacts service unit test", () => {
   describe("findAll()", () => {
     it("Should call the method find of database", sinonTest(async () => {
       const dbMock = sinon.mock(mongoose.connection);
-      const modelStub = sinon.stub(mongoose, "model");
+      const modelStub: {[k: string]: any} = sinon.stub(mongoose, "model");
 
-      const loggerMock = sinon.mock(winston.createLogger());
-      const contactsService = new ContactsService({ db: dbMock, logger: loggerMock});
+      modelStub.find = sinon.stub();
+
+      dbMock.expects("model").once()
+        .withArgs("contact")
+        .returns(modelStub);
+
+      sinon.mock(winston.createLogger);
+      const contactsService = new ContactsService({ db: mongoose.connection, logger: winston.createLogger()});
 
       contactsService.findAll();
+
+      dbMock.verify();
+
+      sinon.assert.calledWith(modelStub.find, {deleted: false});
     }));
   });
 });
