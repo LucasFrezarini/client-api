@@ -3,8 +3,8 @@ import * as mongoose from "mongoose";
 import * as sinon from "sinon";
 import { configureTest } from "sinon-test";
 import * as winston from "winston";
-import { IContact } from "../../../../app/interfaces/IContact";
-import ContactsService from "../../../../app/services/ContactsService";
+import { IContact } from "../../../app/interfaces/IContact";
+import ContactsService from "../../../app/services/ContactsService";
 const sinonTest = configureTest(sinon);
 
 afterEach(() => {
