@@ -62,6 +62,27 @@ class ContactsController {
       }).code(500);
     }
   }
+
+  public async deleteContact(req: Request, h: ResponseToolkit) {
+    const logger = container.resolve("logger") as Logger;
+    const service = container.resolve("contactsService") as ContactsService;
+
+    const params = req.params as any;
+    const id = params.id;
+
+    try {
+      const removedContact = await service.delete(id);
+      return h.response({
+        msg: "Contact removed successfully!",
+        removedContact,
+      });
+    } catch (error) {
+      logger.error(error);
+      return h.response({
+        msg: "An internal server error occurred.",
+      }).code(500);
+    }
+  }
 }
 
 export { ContactsController };

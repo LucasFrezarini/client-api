@@ -13,7 +13,7 @@ const contactsRoutes = (): ServerRoute[] => {
       options: {
         tags: ["api"],
       },
-      path: "/contacts",
+      path: "/api/contacts",
     },
     {
       handler: controller.saveContact,
@@ -34,7 +34,7 @@ const contactsRoutes = (): ServerRoute[] => {
           },
         },
       },
-      path: "/contacts",
+      path: "/api/contacts",
     },
     {
       handler: controller.updateContact,
@@ -58,7 +58,20 @@ const contactsRoutes = (): ServerRoute[] => {
           },
         },
       },
-      path: "/contacts/{id}",
+      path: "/api/contacts/{id}",
+    },
+    {
+      handler: controller.deleteContact,
+      method: "DELETE",
+      options: {
+        tags: ["api"],
+        validate: {
+          params: {
+            id: Joi.string().required(),
+          },
+        },
+      },
+      path: "/api/contacts/{id}",
     },
   ];
 };

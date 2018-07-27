@@ -29,6 +29,12 @@ class ContactsService {
       new: true,
     });
   }
+
+  public delete(id: any) {
+    return this.db.model("contact").findByIdAndUpdate(id, {
+      deleted: true,
+    }, { new: true });
+  }
 }
 
 export default ContactsService;

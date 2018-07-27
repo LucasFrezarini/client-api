@@ -6,6 +6,7 @@ class SwaggerPlugin implements IPlugin {
   public getConfiguration(): ServerRegisterPluginObject<any> {
     return {
       options: {
+        documentationPath: "/api/docs",
         info: {
           description: "Contacts Api Documentation",
           title: "Contacts Api",

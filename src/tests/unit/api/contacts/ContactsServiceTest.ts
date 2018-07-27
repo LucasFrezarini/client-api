@@ -129,4 +129,30 @@ describe("Contacts service unit test", () => {
       },
     ));
   });
+
+  describe("delete()", () => {
+    it("Should update the contact in the database and set it as deleted", sinonTest(
+      async () => {
+        const dbMock = sinon.mock(mongoose.connection);
+        const modelStub: {[k: string]: any} = sinon.stub(mongoose, "model");
+
+        const id = "a3dv675c";
+
+        modelStub.findByIdAndUpdate = sinon.stub();
+
+        dbMock.expects("model").once()
+          .withArgs("contact")
+          .returns(modelStub);
+
+        sinon.mock(winston.createLogger);
+        const contactsService = new ContactsService({ db: mongoose.connection, logger: winston.createLogger()});
+
+        contactsService.delete(id);
+
+        dbMock.verify();
+
+        sinon.assert.calledWith(modelStub.findByIdAndUpdate, id, { deleted: true });
+      },
+    ));
+  });
 });
