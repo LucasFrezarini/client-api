@@ -10,7 +10,7 @@
     "dev": "gulp server",
     "tests": "mocha",
     "start": "node dist/app/index.js",
-    "unit-test": "mocha --opts src/tests/unit/mocha.opts src/tests/**/*.test.ts",
+    "unit-test": "mocha --opts src/tests/unit/mocha.opts src/tests/unit/**/*.ts",
     "unit-coverage": "nyc npm run unit-test"
   },
   "author": "",
