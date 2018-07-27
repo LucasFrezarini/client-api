@@ -36,6 +36,30 @@ const contactsRoutes = (): ServerRoute[] => {
       },
       path: "/contacts",
     },
+    {
+      handler: controller.updateContact,
+      method: "PATCH",
+      options: {
+        tags: ["api"],
+        validate: {
+          params: {
+            id: Joi.string().required(),
+          },
+          payload: {
+            contact: Joi.object({
+              email: Joi.string().optional(),
+              firstName: Joi.string().optional(),
+              lastName: Joi.string().optional(),
+              phones: Joi.array().items(Joi.object({
+                number: Joi.number().required(),
+                sort: Joi.string().default("residential"),
+              })),
+            }).required(),
+          },
+        },
+      },
+      path: "/contacts/{id}",
+    },
   ];
 };
 

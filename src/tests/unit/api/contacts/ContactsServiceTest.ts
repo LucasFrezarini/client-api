@@ -49,9 +49,19 @@ describe("Contacts service unit test", () => {
         sinon.mock(winston.createLogger);
         const contactsService = new ContactsService({ db: mongoose.connection, logger: winston.createLogger()});
 
-        // contactsService.find();
+        const criteria = { deleted: false };
+        const fields = ["firstName", "lastName"];
+        const options = {
+          sort: {
+            createdAt: -1,
+          },
+        };
+
+        contactsService.find(criteria, fields, options);
 
         dbMock.verify();
+
+        sinon.assert.calledWith(modelStub.find, criteria, fields, options);
       },
     ));
   });
@@ -82,6 +92,40 @@ describe("Contacts service unit test", () => {
         dbMock.verify();
 
         sinon.assert.calledWith(modelStub.create, contact);
+      },
+    ));
+  });
+
+  describe("update()", () => {
+    it("Should update the contact in the database and return the updated data", sinonTest(
+      async () => {
+        const dbMock = sinon.mock(mongoose.connection);
+        const modelStub: {[k: string]: any} = sinon.stub(mongoose, "model");
+
+        const id = "a3dv675c";
+
+        const contact: IContact = {
+          email: "lucas.update@gmail.com",
+          firstName: "Lucas",
+          lastName: "Update",
+        };
+
+        modelStub.findByIdAndUpdate = sinon.stub().returns(contact);
+
+        dbMock.expects("model").once()
+          .withArgs("contact")
+          .returns(modelStub);
+
+        sinon.mock(winston.createLogger);
+        const contactsService = new ContactsService({ db: mongoose.connection, logger: winston.createLogger()});
+
+        const updatedContact = contactsService.update(id, contact);
+
+        expect(updatedContact).to.be.equals(contact);
+
+        dbMock.verify();
+
+        sinon.assert.calledWith(modelStub.findByIdAndUpdate, id, contact);
       },
     ));
   });

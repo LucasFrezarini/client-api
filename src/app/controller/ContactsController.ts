@@ -38,6 +38,30 @@ class ContactsController {
       }).code(500);
     }
   }
+
+  public async updateContact(req: Request, h: ResponseToolkit) {
+    const logger = container.resolve("logger") as Logger;
+    const service = container.resolve("contactsService") as ContactsService;
+
+    const params = req.params as any;
+    const id = params.id;
+
+    const payload = req.payload as any;
+    const contact = payload.contact as IContact;
+
+    try {
+      const updatedContact = await service.update(id, contact);
+      return h.response({
+        msg: "Contact updated successfully!",
+        updatedContact,
+      });
+    } catch (error) {
+      logger.error(error);
+      return h.response({
+        msg: "An internal server error occurred.",
+      }).code(500);
+    }
+  }
 }
 
 export { ContactsController };

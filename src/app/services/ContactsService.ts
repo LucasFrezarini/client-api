@@ -1,4 +1,4 @@
-import { Connection } from "mongoose";
+import { Connection, Model } from "mongoose";
 import { Logger } from "winston";
 import { IContact } from "../interfaces/IContact";
 
@@ -16,12 +16,18 @@ class ContactsService {
     return this.db.model("contact").find({deleted: false});
   }
 
-  public find(criteria, fields, sort) {
-    return this.db.model("contact");
+  public find(criteria: object, fields: string[], options?: object) {
+    return this.db.model("contact").find(criteria, fields, options);
   }
 
   public create(contact: IContact) {
     return this.db.model("contact").create(contact);
+  }
+
+  public update(id: any, data: IContact) {
+    return this.db.model("contact").findByIdAndUpdate(id, data, {
+      new: true,
+    });
   }
 }
 
