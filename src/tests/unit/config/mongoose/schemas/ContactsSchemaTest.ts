@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import * as mongoose from "mongoose";
-import * as winston from "winston";
 import { ContactSchema } from "../../../../../app/config/mongoose/schemas/ContactsSchema";
 
 describe("Contacts Schema Unit Test", () => {
