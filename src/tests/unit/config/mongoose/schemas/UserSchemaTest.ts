@@ -23,5 +23,5 @@ describe("User schema unit test", () => {
       expect(err.errors.password).to.exist;
       done();
     });
-  })
+  });
 });
