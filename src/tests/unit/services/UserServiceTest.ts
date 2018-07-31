@@ -71,4 +71,27 @@ describe("User service unit test", () => {
       expect(isPasswordEquals).to.be.true;
     }));
   });
+
+  describe("findById()", () => {
+    it("Should call the method findById from the model with the specified ID", sinonTest(async () => {
+      const dbMock = sinon.mock(mongoose.connection);
+      const modelStub: {[k: string]: any} = sinon.stub(mongoose, "model");
+
+      modelStub.findById = sinon.stub();
+
+      dbMock.expects("model").once()
+        .withArgs("user")
+        .returns(modelStub);
+
+      sinon.mock(winston.createLogger);
+
+      const userService = new UserService({ db: mongoose.connection, logger: winston.createLogger()});
+
+      const id = "a1b2c3d4";
+
+      const user = await userService.findById(id);
+
+      sinon.assert.calledWith(modelStub.findById, id);
+    }));
+  });
 });

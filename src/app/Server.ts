@@ -1,6 +1,7 @@
 import * as Hapi from "hapi";
 import { Logger } from "winston";
 import { IPlugin } from "./plugins";
+import AuthService from "./services/AuthService";
 
 export class Server {
   private port = process.env.SERVER_PORT;
@@ -9,11 +10,13 @@ export class Server {
   private logger: Logger;
   private plugins: IPlugin[];
   private routes: Hapi.ServerRoute[];
+  private authService: AuthService;
 
-  constructor({ logger, plugins, routes }) {
+  constructor({ authService, logger, plugins, routes }) {
     this.logger = logger;
     this.plugins = plugins;
     this.routes = routes;
+    this.authService = authService;
   }
 
   public async init() {
@@ -25,8 +28,11 @@ export class Server {
     });
 
     try {
-      this.loadRoutes(serverInstance);
       await this.registerPlugins(serverInstance);
+
+      this.configureAuthentication(serverInstance);
+      this.loadRoutes(serverInstance);
+
       await serverInstance.start();
       return serverInstance;
     } catch (error) {
@@ -46,6 +52,14 @@ export class Server {
     await Promise.all(
       this.plugins.map(this.registerPlugin.bind(this, serverInstance)),
     );
+  }
+
+  private configureAuthentication(serverInstance: Hapi.Server) {
+    serverInstance.auth.strategy("jwt", "jwt", {
+      key: process.env.SECRET_KEY,
+      validate: this.authService.validate,
+      verifyOptions: { algorithms: [ "HS256" ] },
+    });
   }
 
   private async registerPlugin(serverInstance: Hapi.Server, plugin: IPlugin) {

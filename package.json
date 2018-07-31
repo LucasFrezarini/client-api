@@ -56,6 +56,7 @@
     "hapi-swagger": "^9.1.1",
     "inert": "^5.1.0",
     "joi": "^13.4.0",
+    "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.2.3",
     "reflect-metadata": "^0.1.12",
     "vision": "^5.3.3",

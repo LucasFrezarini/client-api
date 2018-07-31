@@ -22,6 +22,10 @@ class UserService {
 
     return this.db.model("user").create(userWithSaltPassword) as any;
   }
+
+  public findById(id: string) {
+    return this.db.model("user").findById(id);
+  }
 }
 
 export default UserService;

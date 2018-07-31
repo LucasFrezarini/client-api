@@ -61,7 +61,7 @@ describe("Auth service unit test", () => {
       expect(authenticated.isValid).to.be.false;
     }));
 
-    it("Should return false if decoded jwt has a id, but it doesnt exist on the database", sinonTest(async () => {
+    it("Should return false if decoded jwt has a id, but it doesn't exist on the database", sinonTest(async () => {
       const decoded = {
         id: "a1b2c3d4",
       };
