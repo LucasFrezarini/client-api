@@ -12,7 +12,7 @@ class UserService {
     this.logger = logger;
   }
 
-  public async create(user: IUser): Promise<IUser> {
+  public async create(user: IUser): Promise<any> {
     const salt = await bcrypt.genSalt(10);
 
     const userWithSaltPassword = {

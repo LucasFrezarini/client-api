@@ -24,4 +24,14 @@ describe("User schema unit test", () => {
       done();
     });
   });
+
+  it("Should have timestamps", () => {
+    const Model = mongoose.model("user", userSchema);
+    const user = new Model();
+
+    // tslint:disable-next-line:no-unused-expression
+    expect(user.schema.path("createdAt")).to.be.not.undefined;
+    // tslint:disable-next-line:no-unused-expression
+    expect(user.schema.path("updatedAt")).to.be.not.undefined;
+  });
 });

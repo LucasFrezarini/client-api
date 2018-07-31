@@ -7,6 +7,7 @@ class SwaggerPlugin implements IPlugin {
     return {
       options: {
         documentationPath: "/api/docs",
+        grouping: "tags",
         info: {
           description: "Contacts Api Documentation",
           title: "Contacts Api",

@@ -11,6 +11,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     type: SchemaTypes.String,
   },
-});
+}, { timestamps: true });
 
 export { userSchema };
