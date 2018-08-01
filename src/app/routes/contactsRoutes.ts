@@ -11,7 +11,7 @@ const contactsRoutes = (): ServerRoute[] => {
       handler: controller.getContacts,
       method: "GET",
       options: {
-        tags: ["api"],
+        tags: ["api", "contact"],
       },
       path: "/api/contacts",
     },
@@ -19,7 +19,7 @@ const contactsRoutes = (): ServerRoute[] => {
       handler: controller.saveContact,
       method: "POST",
       options: {
-        tags: ["api"],
+        tags: ["api", "contact"],
         validate: {
           payload: {
             contact: Joi.object({
@@ -40,7 +40,7 @@ const contactsRoutes = (): ServerRoute[] => {
       handler: controller.updateContact,
       method: "PATCH",
       options: {
-        tags: ["api"],
+        tags: ["api", "contact"],
         validate: {
           params: {
             id: Joi.string().required(),
@@ -64,7 +64,7 @@ const contactsRoutes = (): ServerRoute[] => {
       handler: controller.deleteContact,
       method: "DELETE",
       options: {
-        tags: ["api"],
+        tags: ["api", "contact"],
         validate: {
           params: {
             id: Joi.string().required(),

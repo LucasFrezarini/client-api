@@ -1,4 +1,5 @@
 import {
+  HapiAuthJwtPlugin,
   InertPlugin,
   SwaggerPlugin,
   VisionPlugin,
@@ -14,6 +15,7 @@ class PluginProvider {
       new InertPlugin(),
       new SwaggerPlugin(),
       new VisionPlugin(),
+      new HapiAuthJwtPlugin(),
     ];
   }
 }
