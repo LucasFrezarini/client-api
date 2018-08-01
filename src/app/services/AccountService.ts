@@ -20,17 +20,39 @@ class AccountService {
       const search = { username: user.username };
       const fields = ["_id", "username", "password"];
 
-      const userData = await this.userService.find(search, fields) as any;
+      const userDbData = await this.userService.find(search, fields) as any;
+
+      if (!userDbData) {
+        return this.loginResponseHandler("Invalid username");
+      }
+
+      const isPasswordCorrect = await bcrypt.compare(user.password, userDbData.password);
+
+      if (!isPasswordCorrect) {
+        return this.loginResponseHandler("Invalid password");
+      }
 
       const dataToSign = {
-        id: userData._id,
-        username: userData.username,
+        id: userDbData._id,
+        username: userDbData.username,
       };
 
-      return this.authService.generateToken(dataToSign);
+      const token = await this.authService.generateToken(dataToSign);
+
+      return this.loginResponseHandler("Authenticated", true, token);
     } catch (error) {
       console.log(error);
     }
+  }
+
+  private loginResponseHandler(msg: string, success: boolean = false, token?: string) {
+    const response: any = { msg, success };
+
+    if (token) {
+      response.token = token;
+    }
+
+    return response;
   }
 }
 
