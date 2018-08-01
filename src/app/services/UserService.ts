@@ -2,6 +2,7 @@ import * as bcrypt from "bcrypt";
 import { Connection } from "mongoose";
 import { Logger } from "winston";
 import { IUser } from "../interfaces/IUser";
+import AuthService from "./AuthService";
 
 class UserService {
   private db: Connection;
@@ -25,6 +26,10 @@ class UserService {
 
   public findById(id: string) {
     return this.db.model("user").findById(id);
+  }
+
+  public find(criteria, fields?: string[], options?: object) {
+    return this.db.model("user").find(criteria, fields, options);
   }
 }
 

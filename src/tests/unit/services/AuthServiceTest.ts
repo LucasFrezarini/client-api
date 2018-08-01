@@ -6,11 +6,26 @@ import * as sinon from "sinon";
 import { configureTest } from "sinon-test";
 import * as winston from "winston";
 import AuthService from "../../../app/services/AuthService";
+import UserService from "../../../app/services/UserService";
 
 const sinonTest = configureTest(sinon);
 
 afterEach(() => {
+  dbMock.restore();
   sinon.restore();
+});
+
+let dbMock;
+let authServiceConstructorArgs;
+
+beforeEach(() => {
+  dbMock = sinon.mock(mongoose.connection);
+  sinon.mock(winston.createLogger);
+
+  authServiceConstructorArgs = {
+    db: mongoose.connection,
+    logger: winston.createLogger(),
+  };
 });
 
 describe("Auth service unit test", () => {
@@ -20,7 +35,6 @@ describe("Auth service unit test", () => {
         id: "a1b2c3d4",
       };
 
-      const dbMock = sinon.mock(mongoose.connection);
       const modelStub: {[k: string]: any} = sinon.stub(mongoose, "model");
 
       modelStub.findById = sinon.stub().callsFake((v) => Promise.resolve({
@@ -31,9 +45,7 @@ describe("Auth service unit test", () => {
         .withArgs("user")
         .returns(modelStub);
 
-      sinon.mock(winston.createLogger);
-
-      const authService = new AuthService({ db: mongoose.connection, logger: winston.createLogger()});
+      const authService = new AuthService(authServiceConstructorArgs);
 
       const authenticated = await authService.validate(decoded, {});
 
@@ -45,7 +57,6 @@ describe("Auth service unit test", () => {
     }));
 
     it("Should return false if the decoded jwt has no id", sinonTest(async () => {
-      const dbMock = sinon.mock(mongoose.connection);
       const modelStub: {[k: string]: any} = sinon.stub(mongoose, "model");
 
       modelStub.findById = sinon.stub();
@@ -54,7 +65,7 @@ describe("Auth service unit test", () => {
 
       sinon.mock(winston.createLogger);
 
-      const authService = new AuthService({ db: mongoose.connection, logger: winston.createLogger()});
+      const authService = new AuthService(authServiceConstructorArgs);
 
       const authenticated = await authService.validate({}, {});
 
@@ -67,7 +78,6 @@ describe("Auth service unit test", () => {
         id: "a1b2c3d4",
       };
 
-      const dbMock = sinon.mock(mongoose.connection);
       const modelStub: {[k: string]: any} = sinon.stub(mongoose, "model");
 
       modelStub.findById = sinon.stub().callsFake((v) => Promise.resolve(undefined));
@@ -78,7 +88,7 @@ describe("Auth service unit test", () => {
 
       sinon.mock(winston.createLogger);
 
-      const authService = new AuthService({ db: mongoose.connection, logger: winston.createLogger()});
+      const authService = new AuthService(authServiceConstructorArgs);
 
       const authenticated = await authService.validate(decoded, {});
 
@@ -91,11 +101,9 @@ describe("Auth service unit test", () => {
 
   describe("generateToken()", () => {
     it("Should generate a JWT with the data passed as parameter", sinonTest(async () => {
-      const dbMock = sinon.mock(mongoose.connection);
-
       sinon.mock(winston.createLogger);
 
-      const authService = new AuthService({ db: mongoose.connection, logger: winston.createLogger()});
+      const authService = new AuthService(authServiceConstructorArgs);
 
       const data = {
         id: 1,
@@ -110,6 +118,27 @@ describe("Auth service unit test", () => {
 
       expect(decoded.id).to.be.equals(data.id);
       expect(decoded.name).to.be.equals(data.name);
+    }));
+
+    it("Should generate a JWT with expires date passed as parameter", sinonTest(async () => {
+      sinon.mock(winston.createLogger);
+
+      const authService = new AuthService(authServiceConstructorArgs);
+
+      const data = {
+        id: 1,
+        name: "test",
+      };
+
+      const expiresIn = "1h";
+
+      process.env.SECRET_KEY = "secret";
+
+      const token = await authService.generateToken(data, expiresIn);
+
+      const decoded = jwt.decode(token) as any;
+
+      expect(decoded.exp).to.be.equals(3600);
     }));
   });
 });
