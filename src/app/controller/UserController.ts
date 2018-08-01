@@ -23,7 +23,7 @@ class UserController {
             username: createdUser.username,
           },
         },
-      });
+      }).code(201);
     } catch (error) {
       logger.error(error);
       return h.response({

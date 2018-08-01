@@ -31,6 +31,10 @@ class UserService {
   public find(criteria, fields?: string[], options?: object) {
     return this.db.model("user").find(criteria, fields, options);
   }
+
+  public findOne(criteria, fields?: string[], options?: object) {
+    return this.db.model("user").findOne(criteria, fields, options);
+  }
 }
 
 export default UserService;

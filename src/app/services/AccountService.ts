@@ -20,7 +20,7 @@ class AccountService {
       const search = { username: user.username };
       const fields = ["_id", "username", "password"];
 
-      const userDbData = await this.userService.find(search, fields) as any;
+      const userDbData = await this.userService.findOne(search, fields) as any;
 
       if (!userDbData) {
         return this.loginResponseHandler("Invalid username");

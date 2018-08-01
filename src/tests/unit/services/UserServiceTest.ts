@@ -126,11 +126,39 @@ describe("User service unit test", () => {
         },
       };
 
-      userService.find(criteria, fields, options);
+      await userService.find(criteria, fields, options);
 
       dbMock.verify();
 
       sinon.assert.calledWith(modelStub.find, criteria, fields, options);
+    }));
+  });
+
+  describe("findOne()", () => {
+    it("Should call mongoose findOne with the passed parameters", sinonTest(async () => {
+      const modelStub: {[k: string]: any} = sinon.stub(mongoose, "model");
+
+      modelStub.findOne = sinon.stub();
+
+      dbMock.expects("model").once()
+        .withArgs("user")
+        .returns(modelStub);
+
+      const userService = new UserService(userServiceConstructorArgs);
+      const criteria = {username: "test"};
+      const fields = ["username", "createdAt"];
+
+      const options = {
+        sort: {
+          createdAt: -1,
+        },
+      };
+
+      await userService.findOne(criteria, fields, options);
+
+      dbMock.verify();
+
+      sinon.assert.calledWith(modelStub.findOne, criteria, fields, options);
     }));
   });
 });

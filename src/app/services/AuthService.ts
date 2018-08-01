@@ -1,9 +1,6 @@
-import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { Connection } from "mongoose";
 import { Logger } from "winston";
-import { IUser } from "../interfaces/IUser";
-import UserService from "./UserService";
 
 class AuthService {
   private db: Connection;

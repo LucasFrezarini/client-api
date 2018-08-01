@@ -47,7 +47,7 @@ describe("Account service unit test", () => {
 
       const token = "mockedToken";
 
-      UserServiceMock.find = sinon.stub().callsFake(() => Promise.resolve({
+      UserServiceMock.findOne = sinon.stub().callsFake(() => Promise.resolve({
         _id: "a1b2c3d4",
         password: passwordToReturn,
         username: "test",
@@ -62,7 +62,7 @@ describe("Account service unit test", () => {
       expect(response).to.has.all.keys(["msg", "success", "token"]);
       expect(response.token).to.be.equals("mockedToken");
 
-      sinon.assert.calledWith(UserServiceMock.find, {username: user.username}, ["_id", "username", "password"]);
+      sinon.assert.calledWith(UserServiceMock.findOne, {username: user.username}, ["_id", "username", "password"]);
       sinon.assert.calledWith(AuthServiceMock.generateToken, {id: "a1b2c3d4", username: user.username});
     }));
 
@@ -76,7 +76,7 @@ describe("Account service unit test", () => {
 
       const token = "mockedToken";
 
-      UserServiceMock.find = sinon.stub().callsFake(() => Promise.resolve({
+      UserServiceMock.findOne = sinon.stub().callsFake(() => Promise.resolve({
         _id: "a1b2c3d4",
         password: passwordToReturn,
         username: "test",
@@ -95,7 +95,7 @@ describe("Account service unit test", () => {
       sinon.assert.notCalled(AuthServiceMock.generateToken);
     }));
 
-    it("Shouldn't return password if username doesn't exists", sinonTest(async () => {
+    it("Shouldn't return token if username doesn't exists", sinonTest(async () => {
       const user: IUser = {
         password: "test",
         username: "doesn't exists",
@@ -105,7 +105,7 @@ describe("Account service unit test", () => {
 
       const token = "mockedToken";
 
-      UserServiceMock.find = sinon.stub().callsFake(() => Promise.resolve(null));
+      UserServiceMock.findOne = sinon.stub().callsFake(() => Promise.resolve(null));
 
       AuthServiceMock.generateToken = sinon.stub().callsFake(() => Promise.resolve("mockedToken"));
 
