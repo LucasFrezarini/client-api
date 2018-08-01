@@ -1,5 +1,6 @@
 import * as bcrypt from "bcrypt";
 import { expect } from "chai";
+import * as jwt from "jsonwebtoken";
 import * as mongoose from "mongoose";
 import * as sinon from "sinon";
 import { configureTest } from "sinon-test";
@@ -85,6 +86,30 @@ describe("Auth service unit test", () => {
       expect(authenticated.isValid).to.be.false;
 
       sinon.assert.calledWith(modelStub.findById, decoded.id);
+    }));
+  });
+
+  describe("generateToken()", () => {
+    it("Should generate a JWT with the data passed as parameter", sinonTest(async () => {
+      const dbMock = sinon.mock(mongoose.connection);
+
+      sinon.mock(winston.createLogger);
+
+      const authService = new AuthService({ db: mongoose.connection, logger: winston.createLogger()});
+
+      const data = {
+        id: 1,
+        name: "test",
+      };
+
+      process.env.SECRET_KEY = "secret";
+
+      const token = await authService.generateToken(data);
+
+      const decoded = jwt.verify(token, process.env.SECRET_KEY) as any;
+
+      expect(decoded.id).to.be.equals(data.id);
+      expect(decoded.name).to.be.equals(data.name);
     }));
   });
 });

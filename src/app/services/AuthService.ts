@@ -1,4 +1,5 @@
 import * as bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
 import { Connection } from "mongoose";
 import { Logger } from "winston";
 import { IUser } from "../interfaces/IUser";
@@ -24,6 +25,26 @@ class AuthService {
     }
 
     return { isValid: true};
+  }
+
+  public async generateToken(data, expiresIn?) {
+    return new Promise<string>((resolve, reject) => {
+      const options: any = {
+        algorithm: "HS256",
+      };
+
+      if (expiresIn) {
+        options.expiresIn = expiresIn;
+      }
+
+      jwt.sign(data, process.env.SECRET_KEY, options, (err, token) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(token);
+      });
+    });
   }
 }
 
