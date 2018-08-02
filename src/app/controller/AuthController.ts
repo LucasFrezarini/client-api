@@ -16,12 +16,19 @@ class AuthController {
 
     try {
       const loginResponse = await accountService.login(user);
+
+      if (loginResponse.success) {
+        return h.response({
+          msg: "Authenticated",
+          payload: {
+            token: loginResponse.token,
+          },
+        });
+      }
+
       return h.response({
-        msg: "Authenticated",
-        payload: {
-          token: loginResponse.token,
-        },
-      });
+        msg: "Authentication Failed!",
+      }).code(401);
     } catch (error) {
       logger.error(error);
       return h.response({

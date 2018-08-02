@@ -23,6 +23,10 @@ export class Server {
     this.logger.log("info", "Starting server...");
 
     const serverInstance = new Hapi.Server({
+      debug: {
+        log: ["error"],
+        request: ["error"],
+      },
       host: this.host,
       port: this.port,
     });
@@ -57,9 +61,11 @@ export class Server {
   private configureAuthentication(serverInstance: Hapi.Server) {
     serverInstance.auth.strategy("jwt", "jwt", {
       key: process.env.SECRET_KEY,
-      validate: this.authService.validate,
+      validate: this.authService.validate.bind(this.authService),
       verifyOptions: { algorithms: [ "HS256" ] },
     });
+
+    serverInstance.auth.default("jwt");
   }
 
   private async registerPlugin(serverInstance: Hapi.Server, plugin: IPlugin) {

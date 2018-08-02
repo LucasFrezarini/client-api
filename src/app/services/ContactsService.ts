@@ -16,7 +16,7 @@ class ContactsService {
     return this.db.model("contact").find({deleted: false});
   }
 
-  public find(criteria: object, fields: string[], options?: object) {
+  public find(criteria: object, fields?: string[], options?: object) {
     return this.db.model("contact").find(criteria, fields, options);
   }
 

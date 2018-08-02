@@ -11,6 +11,7 @@ const authRoutes = (): ServerRoute[] => {
       handler: controller.auth,
       method: "POST",
       options: {
+        auth: false,
         tags: ["api", "auth"],
         validate: {
           payload: {

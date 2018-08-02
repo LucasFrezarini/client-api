@@ -65,4 +65,15 @@ describe("Contacts Schema Unit Test", () => {
 
     expect(contact.phones[0].sort).to.be.equals("residential");
   });
+
+  it("Should throw error if userId is empty", (done) => {
+    const Schema = mongoose.model("contact", ContactSchema);
+    const contact = new Schema();
+
+    contact.validate((err) => {
+      // tslint:disable-next-line:no-unused-expression
+      expect(err.errors.userId).to.exist;
+      done();
+    });
+  });
 });

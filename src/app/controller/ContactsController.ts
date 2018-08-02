@@ -5,15 +5,20 @@ import { IContact } from "../interfaces/IContact";
 import ContactsService from "../services/ContactsService";
 
 class ContactsController {
-  public async getContacts(req: Request) {
+  public async getContacts(req: Request, h: ResponseToolkit) {
     const logger = container.resolve("logger") as Logger;
+    const credentials = req.auth.credentials as any;
 
     try {
+      const userId = credentials.id;
       const service = container.resolve("contactsService") as ContactsService;
-      const contacts = await service.findAll();
-      return contacts;
+
+      const search = { deleted: false, userId };
+      const contacts = await service.find(search);
+      return h.response(contacts);
     } catch (error) {
       logger.error(error);
+      return h.response(error);
     }
   }
 
@@ -22,8 +27,14 @@ class ContactsController {
     const contact = payload.contact as IContact;
     const logger = container.resolve("logger") as Logger;
 
+    const credentials = req.auth.credentials as any;
+
     try {
       const service = container.resolve("contactsService") as ContactsService;
+      const userId = credentials.id;
+
+      contact.userId = userId;
+
       const createdContact = await service.create(contact);
       return h.response({
         msg: "Contact registered successfully!",

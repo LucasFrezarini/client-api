@@ -11,6 +11,7 @@ const contactsRoutes = (): ServerRoute[] => {
       handler: controller.createUser,
       method: "POST",
       options: {
+        auth: false,
         tags: ["api", "user"],
         validate: {
           payload: {

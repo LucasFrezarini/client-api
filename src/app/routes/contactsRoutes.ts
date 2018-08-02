@@ -12,6 +12,11 @@ const contactsRoutes = (): ServerRoute[] => {
       method: "GET",
       options: {
         tags: ["api", "contact"],
+        validate: {
+          headers: Joi.object({
+            authorization: Joi.string().required(),
+          }).unknown(),
+        },
       },
       path: "/api/contacts",
     },
@@ -21,6 +26,9 @@ const contactsRoutes = (): ServerRoute[] => {
       options: {
         tags: ["api", "contact"],
         validate: {
+          headers: Joi.object({
+            authorization: Joi.string().required(),
+          }).unknown(),
           payload: {
             contact: Joi.object({
               email: Joi.string().required(),
@@ -42,6 +50,9 @@ const contactsRoutes = (): ServerRoute[] => {
       options: {
         tags: ["api", "contact"],
         validate: {
+          headers: Joi.object({
+            authorization: Joi.string().required(),
+          }).unknown(),
           params: {
             id: Joi.string().required(),
           },
@@ -66,6 +77,9 @@ const contactsRoutes = (): ServerRoute[] => {
       options: {
         tags: ["api", "contact"],
         validate: {
+          headers: Joi.object({
+            authorization: Joi.string().required(),
+          }).unknown(),
           params: {
             id: Joi.string().required(),
           },

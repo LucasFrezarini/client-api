@@ -85,6 +85,7 @@ describe("Contacts service unit test", () => {
           email: "lucas.frezarini@gmail.com",
           firstName: "Lucas",
           lastName: "Frezarini",
+          userId: "abcd1234",
         };
 
         contactsService.create(contact);
@@ -108,6 +109,7 @@ describe("Contacts service unit test", () => {
           email: "lucas.update@gmail.com",
           firstName: "Lucas",
           lastName: "Update",
+          userId: "abcd1234",
         };
 
         modelStub.findByIdAndUpdate = sinon.stub().returns(contact);

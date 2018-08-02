@@ -18,6 +18,11 @@ const ContactSchema = new mongoose.Schema({
     type: SchemaTypes.String,
   },
 
+  userId: {
+    required: true,
+    type: SchemaTypes.ObjectId,
+  },
+
   deleted: {
     default: false,
     type: SchemaTypes.Boolean,
